@@ -1,0 +1,43 @@
+
+# Let us solve Neural Network Regression problem using 
+#Boston dataset in MSS library.
+
+library(MASS)
+
+data.df <- Boston
+
+#Here investigate the features of Boston
+str(Boston)
+
+## Linear Regression MOdel
+
+lm_model <- lm(medv ~., data = data.df)
+lm_prediction <- predict(lm_model)
+
+# Check the mean squared error
+mean((lm_prediction - data.df$medv)^2)
+
+plot(data.df$medv, lm_prediction, main = "Linear regression vs Actual"
+     , xlab = "Actual", ylab = "Prediction from Linear Regression Model")
+
+
+## MODEL: Neural Network
+require(nnet)
+
+# Scale the inputs: By dividing the values by maximum medv value.
+x_max = max(data.df$medv)
+data.df$medv <- data.df$medv/x_max
+
+#prediction model
+nn.model <- nnet(medv ~., data = data.df, size = 2)
+#predicton
+nn_prediction <- predict(nn.model)
+
+#Scale back by multiplying x_max
+nn_prediction <- nn_prediction * x_max
+
+mean((nn_prediction-data.df$medv)^2)
+plot(data.df$medv, nn_prediction, main = "Neural Network vs Actual"
+     , xlab = "Actual", ylab = "Prediction from NN-Model")
+
+
